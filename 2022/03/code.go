@@ -48,7 +48,16 @@ func run(part2 bool, input string) any {
 	}
 	// when you're ready to do part 2, remove this "not implemented" block
 	if part2 {
-		return "not implemented"
+		sum := 0
+		rucksack := [3]map[rune]struct{}{}
+		for i, line := range strings.Split(input, "\n") {
+			rucksack[i%3] = stringToSet(line)
+			if (i+1)%3 == 0 {
+				sum += getPriority(getOnlyKey(intersection(intersection(rucksack[0], rucksack[1]), rucksack[2])))
+				rucksack = [3]map[rune]struct{}{}
+			}
+		}
+		return sum
 	}
 	// solve part 1 here
 	sum := 0
