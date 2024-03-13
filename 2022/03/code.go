@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/jpillora/puzzler/harness/aoc"
 )
 
@@ -15,10 +17,46 @@ func main() {
 // 4. with: true (part2), and user input
 // the return value of each run is printed to stdout
 func run(part2 bool, input string) any {
+	getPriority := func(c rune) int {
+		if int(c) < 97 {
+			return int(c) - 38
+		}
+		return int(c) - 96
+	}
+	stringToSet := func(s string) map[rune]struct{} {
+		set := make(map[rune]struct{})
+		for _, char := range s {
+			set[char] = struct{}{}
+		}
+		return set
+	}
+	intersection := func(set1, set2 map[rune]struct{}) map[rune]struct{} {
+		intersection := make(map[rune]struct{})
+		for value := range set1 {
+			if _, exists := set2[value]; exists {
+				intersection[value] = struct{}{}
+			}
+		}
+		return intersection
+	}
+	getOnlyKey := func(m map[rune]struct{}) (key rune) {
+		for k := range m {
+			key = k
+			break
+		}
+		return key
+	}
 	// when you're ready to do part 2, remove this "not implemented" block
 	if part2 {
 		return "not implemented"
 	}
 	// solve part 1 here
-	return 42
+	sum := 0
+	for _, line := range strings.Split(input, "\n") {
+		mid_idx := len(line)
+		first_half_set := stringToSet(line[:mid_idx/2])
+		second_half_set := stringToSet(line[mid_idx/2:])
+		sum += getPriority(getOnlyKey(intersection(first_half_set, second_half_set)))
+	}
+	return sum
 }
