@@ -17,7 +17,21 @@ func main() {
 func run(part2 bool, input string) any {
 	// when you're ready to do part 2, remove this "not implemented" block
 	if part2 {
-		return "not implemented"
+		buf := make([]rune, 14)
+		buf_set := map[rune]struct{}{}
+		for i, r := range input {
+			buf[i%14] = r
+			if i > 3 {
+				for _, r := range buf {
+					buf_set[r] = struct{}{}
+				}
+				if len(buf_set) == 14 {
+					return i + 1
+				}
+				buf_set = map[rune]struct{}{}
+			}
+		}
+		return buf
 	}
 	// solve part 1 here
 	buf := make([]rune, 4)
